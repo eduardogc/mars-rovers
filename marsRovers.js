@@ -1,13 +1,17 @@
+function validateInstruction(instruction) {
+    const instructionArray = instruction.split('');
+    return instructionArray.every(item => item === 'M' || item === 'L' || item === 'R');
+}
+
 function validateEntries(landingPositionsArray, instructionsArray) {
     if (landingPositionsArray.length !== instructionsArray.length) {
         return false;
     }
     return true;
-    // check others
 }
 
 function rotateLeft(currentPosition) {
-    switch(currentPosition) {
+    switch (currentPosition) {
         case 'N': return 'W';
         case 'W': return 'S';
         case 'S': return 'E';
@@ -17,7 +21,7 @@ function rotateLeft(currentPosition) {
 }
 
 function rotateRight(currentPosition) {
-    switch(currentPosition) {
+    switch (currentPosition) {
         case 'N': return 'E';
         case 'E': return 'S';
         case 'S': return 'W';
@@ -27,7 +31,7 @@ function rotateRight(currentPosition) {
 }
 
 function rotate(current, command) {
-    switch(command) {
+    switch (command) {
         case 'L': return rotateLeft(current);
         case 'R': return rotateRight(current);
         default: return current;
@@ -35,7 +39,7 @@ function rotate(current, command) {
 }
 
 function move(x, y, currentPosition) {
-    switch(currentPosition) {
+    switch (currentPosition) {
         case 'N': return { x, y: y + 1, currentPosition };
         case 'E': return { x: x + 1, y, currentPosition };
         case 'S': return { x, y: y - 1, currentPosition };
@@ -46,6 +50,10 @@ function move(x, y, currentPosition) {
 
 
 function getPosition(landingPosition, instructions) {
+    if (!validateInstruction(instructions)) {
+        return 'Error: Invalid instruction.';
+    }
+
     const landingPositionArray = landingPosition.split(' ');
     const instructionsArray = instructions.split('');
     const initialX = parseInt(landingPositionArray[0]);
@@ -55,13 +63,13 @@ function getPosition(landingPosition, instructions) {
 
     let currentCommand = '';
     let calculatedPosition = '';
-    for(let i = 0; i < instructionsArray.length; i++) {
+    for (let i = 0; i < instructionsArray.length; i++) {
         currentCommand = instructionsArray[i];
-        if(currentCommand === 'M') {
+        if (currentCommand === 'M') {
             currentPositionObject = move(currentPositionObject.x, currentPositionObject.y, currentPositionObject.currentPosition)
         } else {
             calculatedPosition = rotate(currentPositionObject.currentPosition, currentCommand);
-            currentPositionObject = {...currentPositionObject, currentPosition: calculatedPosition };
+            currentPositionObject = { ...currentPositionObject, currentPosition: calculatedPosition };
         }
     }
     const { x, y, currentPosition: finalCalculatedPosition } = currentPositionObject;
@@ -70,14 +78,14 @@ function getPosition(landingPosition, instructions) {
 }
 
 function getPositions(arrayOfLandingPositions, arrayOfInstructions) {
-    if(!validateEntries(arrayOfLandingPositions, arrayOfInstructions)) {
+    if (!validateEntries(arrayOfLandingPositions, arrayOfInstructions)) {
         return 'Error: Invalid entry.';
     }
 
     const arrayOfFinalPositions = [];
     let currentLandingPositions = '';
     let currenInstructions = '';
-    for(let i = 0; i < arrayOfLandingPositions.length; i++) {
+    for (let i = 0; i < arrayOfLandingPositions.length; i++) {
         currentLandingPositions = arrayOfLandingPositions[i];
         currenInstructions = arrayOfInstructions[i];
         arrayOfFinalPositions.push(getPosition(currentLandingPositions, currenInstructions))
