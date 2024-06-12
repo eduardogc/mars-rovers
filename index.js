@@ -1,21 +1,40 @@
 const marsRoversModule = require("./marsRovers");
+const prompt = require("prompt-sync")({ sigint: true });
 const getPosition = marsRoversModule.getPosition;
 const getPositions = marsRoversModule.getPositions;
 
 console.log('MARS ROVERS');
 
-console.log('\nFirst test:');
-console.log('Landing Position: 1 2 N');
-console.log('Instruction: LMLMLMLMM');
-console.log('Final Position:', getPosition("1 2 N", "LMLMLMLMM"));
+const multipleRovers = prompt("Would you like multiple rovers? y/n ");
 
+if (multipleRovers === 'n') {
+    const inputPosition = prompt("Landing Position: ");
+    const inputInstruction = prompt("Instruction: ");
+    console.log('Final Position:', getPosition(inputPosition, inputInstruction));
+} else if (multipleRovers === 'y') {
+    let arrayOfInputPositions = []
+    let inputPosition = 'test'
+    while (inputPosition !== '') {
+        inputPosition = prompt("Landing Position: ");
+        if (inputPosition !== '') {
+            arrayOfInputPositions.push(inputPosition);
+        }
+    }
 
-console.log('\nSecond test:');
-console.log('Landing Position: 3 3 E');
-console.log('Instruction: MRRMMRMRRM');
-console.log('Final Position:', getPosition("3 3 E", "MRRMMRMRRM"));
+    if (arrayOfInputPositions.length === 1 && arrayOfInputPositions[0] === '') {
+        return;
+    }
 
-console.log('\nGetting multiple entries:');
-console.log('Final Positions:', getPositions(["1 2 N", "3 3 E"], ["LMLMLMLMM", "MRRMMRMRRM"]));
+    let i = 0;
+    let arrayOfInputInstructions = [];
+    let inputInstruction = ''
+    while (i < arrayOfInputPositions.length) {
+        inputInstruction = prompt(`Instruction ${i + 1} of ${arrayOfInputPositions.length}: `);
+        arrayOfInputInstructions.push(inputInstruction);
+        i++;
+    }
 
-//todo: make a prompt here
+    console.log('List of Final Positions:', getPositions(arrayOfInputPositions, arrayOfInputInstructions));
+} else {
+    console.log('Sorry, incorrect option.');
+}
