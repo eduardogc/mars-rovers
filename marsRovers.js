@@ -1,3 +1,17 @@
+function validateLandingPosition(landingPosition) {
+    const landingPositionArray = landingPosition.split(' ');
+    if (landingPositionArray.length !== 3) {
+        return false;
+    }
+    if (isNaN(landingPositionArray[0]) || isNaN(landingPositionArray[1])) {
+        return false;
+    }
+    if (!['N', 'E', 'W', 'S'].includes(landingPositionArray[2])) {
+        return false;
+    }
+    return true;
+}
+
 function validateInstruction(instruction) {
     const instructionArray = instruction.split('');
     return instructionArray.every(item => item === 'M' || item === 'L' || item === 'R');
@@ -50,6 +64,10 @@ function move(x, y, currentPosition) {
 
 
 function getPosition(landingPosition, instructions) {
+    if (!validateLandingPosition(landingPosition)) {
+        return 'Error: Invalid landing position.';
+    }
+
     if (!validateInstruction(instructions)) {
         return 'Error: Invalid instruction.';
     }
